@@ -1,26 +1,33 @@
-def show_fact_orders_data(conn):
-    try:
-        # Create a cursor object using the connection
-        cur = conn.cursor()
+from PyQt5.QtWidgets import QApplication, QMainWindow, QTableWidget, QTableWidgetItem
+import sys
 
-        # Query to select data from the FactOrders table
-        query = """SELECT * FROM public."FactOrders" LIMIT 10;"""  # Adjust LIMIT as needed
+def show_fact_orders_data(data):
+    # Create the application
+    app = QApplication(sys.argv)
 
-        # Execute the query
-        cur.execute(query)
+    # Create the main window
+    window = QMainWindow()
+    window.setWindowTitle("FactOrders Data")
 
-        # Fetch all rows from the result set
-        rows = cur.fetchall()
+    # Create a table widget
+    tableWidget = QTableWidget()
+    window.setCentralWidget(tableWidget)
 
-        if rows:
-            print("\nData in the FactOrders table:")
-            for row in rows:
-                print(row)  # Print each row
-        else:
-            print("No data found in the FactOrders table.")
+    # Set row and column count based on data
+    tableWidget.setRowCount(len(data))
+    tableWidget.setColumnCount(len(data[0]))  # Assuming all rows have same number of columns
 
-        # Close the cursor
-        cur.close()
+    # Populate the table with data
+    for row_idx, row_data in enumerate(data):
+        for col_idx, cell_data in enumerate(row_data):
+            item = QTableWidgetItem(str(cell_data))
+            tableWidget.setItem(row_idx, col_idx, item)
 
-    except psycopg2.Error as e:
-        print(f"Error retrieving data from FactOrders table: {e}")
+    # Auto-adjust column widths
+    tableWidget.resizeColumnsToContents()
+
+    # Show the main window
+    window.show()
+
+    # Execute the application
+    sys.exit(app.exec_())

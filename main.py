@@ -1,5 +1,4 @@
 import psycopg2
-from Factorders import show_fact_orders_data
 
 # Database connection parameters
 dbname = 'DWpi'
@@ -24,13 +23,41 @@ def connect_to_database():
         print(f"Unable to connect to the database: {e}")
         return None
 
-if __name__ == "__main__":
+def fetch_fact_orders_data(conn):
+    try:
+        # Create a cursor object using the connection
+        cur = conn.cursor()
+
+        # Query to select data from the FactOrders table
+        query = """SELECT * FROM public."FactOrders" LIMIT 10;"""  # Adjust LIMIT as needed
+
+        # Execute the query
+        cur.execute(query)
+
+        # Fetch all rows from the result set
+        rows = cur.fetchall()
+
+        # Close the cursor
+        cur.close()
+
+        return rows
+
+    except psycopg2.Error as e:
+        print(f"Error retrieving data from FactOrders table: {e}")
+        return []
+
+def main():
     # Connect to the database
     connection = connect_to_database()
-    
+
     if connection:
-        # Call function to show data from FactOrders table
-        show_fact_orders_data(connection)
-        
+        # Fetch data from FactOrders table
+        data = fetch_fact_orders_data(connection)
+
         # Close the database connection
         connection.close()
+
+        return data
+
+if __name__ == "__main__":
+    main()
