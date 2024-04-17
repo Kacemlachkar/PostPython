@@ -5,9 +5,13 @@ This project connects to a PostgreSQL database (`DWpi`), retrieves data from the
 ## Project Structure
 
 project_folder/
+
 │
+
 ├── main.py
+
 ├── Factorders.py
+
 └── fact_orders_gui.py
 
 - `main.py`: Contains database connection and data retrieval logic.
