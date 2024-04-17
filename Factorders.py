@@ -4,7 +4,7 @@ def show_fact_orders_data(conn):
         cur = conn.cursor()
 
         # Query to select data from the FactOrders table
-        query = """SELECT * FROM public."FactOrders" LIMIT 3;"""  # Adjust LIMIT as needed
+        query = """SELECT * FROM public."FactOrders" LIMIT 10;"""  # Adjust LIMIT as needed
 
         # Execute the query
         cur.execute(query)
