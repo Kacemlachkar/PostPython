@@ -1,4 +1,5 @@
 import psycopg2
+from Factorders import show_fact_orders_data
 
 # Database connection parameters
 dbname = 'DWpi'
@@ -7,40 +8,29 @@ password = '999'
 host = 'localhost'
 port = '5432'
 
-try:
-    # Establish a connection to the PostgreSQL database
-    conn = psycopg2.connect(
-        dbname=dbname,
-        user=user,
-        password=password,
-        host=host,
-        port=port
-    )
+def connect_to_database():
+    try:
+        # Establish a connection to the PostgreSQL database
+        conn = psycopg2.connect(
+            dbname=dbname,
+            user=user,
+            password=password,
+            host=host,
+            port=port
+        )
+        print("Connected to the database successfully!")
+        return conn
+    except psycopg2.Error as e:
+        print(f"Unable to connect to the database: {e}")
+        return None
+
+if __name__ == "__main__":
+    # Connect to the database
+    connection = connect_to_database()
     
-    print("Connected to the database successfully!")
-
-    # Create a cursor object using the connection
-    cur = conn.cursor()
-
-    # Query to select data from the FactOrders table
-    query = """SELECT * FROM public."FactOrders" LIMIT 10;"""  # Adjust LIMIT as needed
-
-    # Execute the query
-    cur.execute(query)
-
-    # Fetch all rows from the result set
-    rows = cur.fetchall()
-
-    if rows:
-        print("\nData in the FactOrders table:")
-        for row in rows:
-            print(row)  # Print each row
-    else:
-        print("No data found in the FactOrders table.")
-
-    # Close cursor and connection
-    cur.close()
-    conn.close()
-
-except psycopg2.Error as e:
-    print(f"Unable to connect to the database or retrieve data: {e}")
+    if connection:
+        # Call function to show data from FactOrders table
+        show_fact_orders_data(connection)
+        
+        # Close the database connection
+        connection.close()
